@@ -1,0 +1,5 @@
+package mediatr
+
+func RegisterAllTypes(){
+
+}
