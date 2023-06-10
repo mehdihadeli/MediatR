@@ -76,10 +76,31 @@ func GetAllRegisteredTypes() []reflect.Type {
 	return typeSlice
 }
 
-// TypeByName return the type by its name
+// TypeByName returns the type by its exact name, containing its namespace
 func TypeByName(typeName string) reflect.Type {
 	if typ, ok := types[typeName]; ok {
 		return typ
+	}
+	return nil
+}
+
+// TypesByContainingName returns the types if typename is containing this `typeName`
+func TypesByContainingName(typeName string) []reflect.Type {
+	var containingTypes []reflect.Type
+	for name, typ := range types {
+		if strings.Contains(name, typeName) {
+			containingTypes = append(containingTypes, typ)
+		}
+	}
+	return containingTypes
+}
+
+// TypeByContainingName returns the type if typename is containing this `typeName`
+func TypeByContainingName(typeName string) reflect.Type {
+	for name, typ := range types {
+		if strings.Contains(name, typeName) {
+			return typ
+		}
 	}
 	return nil
 }
