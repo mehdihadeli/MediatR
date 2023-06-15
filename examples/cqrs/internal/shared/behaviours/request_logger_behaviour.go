@@ -2,8 +2,9 @@ package behaviours
 
 import (
 	"context"
-	"github.com/mehdihadeli/go-mediatr"
 	"log"
+
+	"github.com/mehdihadeli/go-mediatr/mediatr"
 )
 
 type RequestLoggerBehaviour struct {
