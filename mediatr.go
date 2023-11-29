@@ -8,6 +8,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+// HandlerRegisterer for registering `RequestHandler` to mediatr registry, if handler implements this interface it will be registered automatically
+type HandlerRegisterer interface {
+	RegisterHandler() error
+}
+
 // RequestHandlerFunc is a continuation for the next task to execute in the pipeline
 type RequestHandlerFunc func(ctx context.Context) (interface{}, error)
 
@@ -18,6 +23,12 @@ type PipelineBehavior interface {
 
 type RequestHandler[TRequest any, TResponse any] interface {
 	Handle(ctx context.Context, request TRequest) (TResponse, error)
+}
+
+// RequestHandlerWithRegisterer for registering `RequestHandler` to mediatr registry and handling `RequestHandler`
+type RequestHandlerWithRegisterer[TRequest any, TResponse any] interface {
+	HandlerRegisterer
+	RequestHandler[TRequest, TResponse]
 }
 
 type RequestHandlerFactory[TRequest any, TResponse any] func() RequestHandler[TRequest, TResponse]
@@ -47,6 +58,11 @@ func registerRequestHandler[TRequest any, TResponse any](handler any) error {
 	requestHandlersRegistrations[requestType] = handler
 
 	return nil
+}
+
+// RegisterMarkedHandlers register all handlers that have implemented `HandlerRegisterer` for registering handlers.
+func RegisterMarkedHandlers() {
+	// TODO: find all types that implement `HandlerRegisterer using reflection
 }
 
 // RegisterRequestHandler register the request handler to mediatr registry.
